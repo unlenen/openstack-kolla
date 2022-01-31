@@ -1,0 +1,4 @@
+[client.cinder]
+	key = XYZ+G9XZw==
+	caps mon = "profile rbd"
+	caps osd = "profile rbd pool=volumes, profile rbd pool=vms, profile rbd pool=images"

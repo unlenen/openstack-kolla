@@ -1,0 +1,27 @@
+ - hosts: "compute,controller"
+   gather_facts: True
+   become: yes
+
+   tasks:
+    - name: Create Ceph Config Folder
+      command: mkdir -p /etc/ceph 
+
+    - name: Copy Tar to Clients
+      copy:
+        src: "/etc/ceph/ceph.tar"
+        dest: /etc/ceph/
+
+    - name: Extract the archive file on the remote node
+      command: "tar -xvf /etc/ceph/ceph.tar -C /etc/ceph/"
+
+
+ - hosts: "compute"
+   gather_facts: True
+   become: yes
+   tasks:
+    - name: Reconfig
+      command: "sed 's#/etc/ceph/myceph.client.cinder.keyring#/etc/ceph/ceph.client.cinder.keyring#g' -i /etc/kolla/nova-compute/config.json"
+
+    - name: Restart
+      command: "docker restart nova_compute"
+
